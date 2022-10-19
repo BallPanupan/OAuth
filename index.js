@@ -47,6 +47,11 @@ app.post('/token', (req, res) => {
   })
 })
 
+app.delete('/logout', (req, res) => {
+  refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+  res.sendStatus(204)
+})
+
 
 // Middleware functions
 function authenticateToken(req, res, next){
