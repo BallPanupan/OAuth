@@ -20,8 +20,17 @@ const posts = [
 
 
 app.post('/register', (req, res) => {
-  register(req.body)
+  let prepareData = {
+    username : req.body.username,
+    password : req.body.password,
+    accessToken : generateAccessToken({name: req.body.username}),
+    refreshToken : jwt.sign({name: req.body.username}, process.env.REFRESH_TOKEN_SECRET)
+  }
+  register(prepareData)
+  console.log(prepareData)
+
   res.sendStatus(201)
+  // res.json({accessToken:accessToken, refreshToken: refreshToken})
 })
 
 

@@ -14,7 +14,8 @@ function mainConnection (query) {
 }
 
 exports.register = async function (info) {
-  let query = `INSERT INTO user SET username = '${info.username}', password = '${info.password}', type_id = 1;`
+  let query = `INSERT INTO user SET username = '${info.username}', password = '${info.password}', type_id = 1, accessToken = '${info.accessToken}', refreshToken = '${info.refreshToken}';`
+  console.log(query)
   mainConnection(query);
   console.log('Register : ', info.username)
 }
