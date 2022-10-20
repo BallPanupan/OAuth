@@ -21,6 +21,8 @@ const posts = [
   }
 ]
 
+let refreshTokens = []
+
 
 app.post('/register', (req, res) => {
   let prepareData = {
@@ -30,17 +32,14 @@ app.post('/register', (req, res) => {
     refreshToken : jwt.sign({name: req.body.username}, process.env.REFRESH_TOKEN_SECRET)
   }
   register(prepareData)
-  console.log(prepareData)
 
   res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
 })
 
 
 //query and show detial of user
-
 app.get('/posts', authenticateToken, (req, res) => {
   let userToken = CheckUser({username:req.user.name})
-
   userInfo = userToken.then(function(result) {
     if(result.length > 0 ){
       res.json(result)
@@ -58,9 +57,13 @@ app.post('/login', (req, res) => {
 
   userInfo = userToken.then(function(result) {
     if(result.length > 0 ){
+      const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+
+      //next : keep this on Database
+      refreshTokens.push(refreshToken)
       res.json({
         accessToken: generateAccessToken(user),
-        refreshToken: jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+        refreshToken: refreshToken
       })
     }else{
       res.sendStatus(401)
@@ -72,36 +75,41 @@ function generateAccessToken(user) {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'})
 }
 
-let refreshTokens = []
+
 app.post('/req_newToken', (req, res) => {
+
   const refreshToken = req.body.token
   if(refreshToken == null ) return res.sendStatus(401)
-  if(refreshTokens.includes.refreshToken) return res.sendStatus(403)
+
+  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
+
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if(err) return res.sendStatus(403)
     const accessToken = generateAccessToken({name: user.name})
     res.json({accessToken: accessToken})
   })
+
 })
 
 app.delete('/logout', (req, res) => {
   refreshTokens = refreshTokens.filter(token => token !== req.body.token)
   res.sendStatus(204)
+
 })
 
 
 // Middleware functions
-function authenticateToken(req, res, next){
+function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
-  if (token == null ) return res.sendStatus(401)
+  if (token == null) return res.sendStatus(401)
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
-    if(err) return res.sendStatus(403)
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403)
     req.user = user
     next()
   })
-} 
+}
 
  
 app.listen(port, () => {
