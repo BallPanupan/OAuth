@@ -2,10 +2,10 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const port = 3000
-
 const jwt = require('jsonwebtoken')
-
+const { mainConnection, register } = require('./module/sql_connection')
 app.use(express.json())
+
 
 const posts = [
   {
@@ -17,6 +17,14 @@ const posts = [
     title: 'Post 1'
   }
 ]
+
+
+app.post('/register', (req, res) => {
+  register(req.body)
+  res.sendStatus(201)
+})
+
+
 
 app.get('/posts', authenticateToken, (req, res) => {
   res.json(posts.filter(post => post.username === req.user.name))
@@ -36,7 +44,7 @@ function generateAccessToken(user) {
 }
 
 let refreshTokens = []
-app.post('/token', (req, res) => {
+app.post('/req_newToken', (req, res) => {
   const refreshToken = req.body.token
   if(refreshToken == null ) return res.sendStatus(401)
   if(refreshTokens.includes.refreshToken) return res.sendStatus(403)
