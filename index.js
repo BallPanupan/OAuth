@@ -14,6 +14,10 @@ const posts = [
   {
     username: 'Jim',
     title: 'Post 1'
+  },
+  {
+    username: 'testRegister28',
+    title: 'Post 28'
   }
 ]
 
@@ -32,8 +36,20 @@ app.post('/register', (req, res) => {
 })
 
 
+//query and show detial of user
 
 app.get('/posts', authenticateToken, (req, res) => {
+  let userToken = CheckUser({username:username})
+
+  userInfo = userToken.then(function(result) {
+    if(result.length > 0 ){
+      console.log(result)
+      res.json(result)
+    }else{
+      res.sendStatus(401)
+    }
+  })
+
   res.json(posts.filter(post => post.username === req.user.name))
 }) 
 
