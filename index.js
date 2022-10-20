@@ -3,9 +3,8 @@ const express = require('express')
 const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
-const { mainConnection, register } = require('./module/sql_connection')
+const { register, CheckUser } = require('./module/sql_connection')
 app.use(express.json())
-
 
 const posts = [
   {
@@ -29,8 +28,8 @@ app.post('/register', (req, res) => {
   register(prepareData)
   console.log(prepareData)
 
-  res.sendStatus(201)
-  // res.json({accessToken:accessToken, refreshToken: refreshToken})
+  res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
+  // res.sendStatus(201)
 })
 
 
@@ -41,11 +40,17 @@ app.get('/posts', authenticateToken, (req, res) => {
 
 app.post('/login', (req, res) => {
   const username = req.body.username
-  const user = { name: username }
-  const accessToken = generateAccessToken(user)
-  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-  refreshTokens.push(refreshToken)
-  res.json({accessToken:accessToken, refreshToken: refreshToken})
+  let userToken = CheckUser({username:username})
+  userInfo = userToken.then(function(result) {
+    if(result.length > 0 ){
+      res.json({
+        accessToken: result[0].accessToken,
+        refreshToken: result[0].refreshToken
+      })
+    }else{
+      res.sendStatus(401)
+    }
+  })
 })
 
 function generateAccessToken(user) {
