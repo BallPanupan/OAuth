@@ -29,7 +29,6 @@ app.post('/register', (req, res) => {
   console.log(prepareData)
 
   res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
-  // res.sendStatus(201)
 })
 
 
@@ -40,12 +39,15 @@ app.get('/posts', authenticateToken, (req, res) => {
 
 app.post('/login', (req, res) => {
   const username = req.body.username
+  const user = { name: username }
+
   let userToken = CheckUser({username:username})
+
   userInfo = userToken.then(function(result) {
     if(result.length > 0 ){
       res.json({
-        accessToken: result[0].accessToken,
-        refreshToken: result[0].refreshToken
+        accessToken: generateAccessToken(user),
+        refreshToken: jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
       })
     }else{
       res.sendStatus(401)
