@@ -25,7 +25,7 @@ exports.register = async function (info) {
 }
 
 exports.CheckUser = async function (info) {
-  let sqlQuery = `SELECT * FROM user WHERE username = '${info.username}';`
+  let sqlQuery = `SELECT * FROM user WHERE username = '${info.username}' LIMIT 1;`
 
   async function main() {
     // create the pool
