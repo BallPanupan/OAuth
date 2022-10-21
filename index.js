@@ -37,7 +37,7 @@ app.post('/register', (req, res) => {
 
 //query and show detial of user
 app.get('/posts', authenticateToken, (req, res) => {
-  let userToken = CheckUser({username:req.user.name})
+  let userToken = CheckUser({username:req.user.username})
   userInfo = userToken.then(function(result) {
     if(result.length > 0 ){
       res.json(result)
@@ -49,21 +49,20 @@ app.get('/posts', authenticateToken, (req, res) => {
 
 app.post('/login', (req, res) => {
   const username = req.body.username
-  const user = { name: username }
-
+  // const user = { name: username }
   let userToken = CheckUser({username:username})
 
   userInfo = userToken.then(function(result) {
     if(result.length > 0 ){
-      const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-      //next : keep this on Database
-
-      // refreshTokens.push(refreshToken)
-      // console.log(refreshTokens)
+      const userData = {
+        "id": result[0].id,
+        "username": result[0].username,
+        "type_id": result[0].type_id,
+      }
+      const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET)
       InsertToken({ username:username, refreshToken:refreshToken })
-
       res.json({
-        accessToken: generateAccessToken(user),
+        accessToken: generateAccessToken(userData),
         refreshToken: refreshToken
       })
     }else{
@@ -72,8 +71,8 @@ app.post('/login', (req, res) => {
   })
 })
 
-function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'})
+function generateAccessToken(data) {
+  return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'})
 }
 
 
@@ -87,10 +86,14 @@ app.post('/newToken', (req, res) => {
   let userToken = CheckRefToken({refreshToken:refreshToken})
   userInfo = userToken.then(function(result) {
     if(result.length > 0 ) {
-      result[0].refreshToken
       jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if(err) return res.sendStatus(403)
-        const accessToken = generateAccessToken({name: user.name})
+        const userData = {
+          "id": user.id,
+          "username": user.username,
+          "type_id": user.type_id,
+        }
+        const accessToken = generateAccessToken(userData)
         res.json({accessToken: accessToken})
       })
     } else {
