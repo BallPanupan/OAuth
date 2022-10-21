@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
-const { register, CheckUser } = require('./module/sql_connection')
+const { register, CheckUser, InsertToken } = require('./module/sql_connection')
 app.use(express.json())
 
 const posts = [
@@ -57,10 +57,12 @@ app.post('/login', (req, res) => {
   userInfo = userToken.then(function(result) {
     if(result.length > 0 ){
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-
       //next : keep this on Database
-      refreshTokens.push(refreshToken)
-      console.log(refreshTokens)
+
+      // refreshTokens.push(refreshToken)
+
+      InsertToken({ username:username, refreshToken:refreshToken })
+
       res.json({
         accessToken: generateAccessToken(user),
         refreshToken: refreshToken

@@ -10,7 +10,9 @@ const connection = mysql.createConnection({
 function mainConnection (query) {
   connection.query(query, function (error, results, fields) {
     if (error) throw error;
+    return results
   })
+  
 }
 
 exports.register = async function (info) {
@@ -39,4 +41,22 @@ exports.CheckUser = async function (info) {
 
   return main()
   
+}
+
+
+exports.InsertToken = async function (data) {
+  let sqlQuery = `SELECT * FROM user WHERE username = '${data.username}' LIMIT 1;`
+  connection.query(sqlQuery, function (error, results, fields) {
+    if (error) throw error;
+
+    let sqlInsert = `INSERT INTO token SET 
+    user_id = '${results[0].id}', 
+    refreshToken = '${data.refreshToken}', 
+    tokenStatus = '';`
+
+    connection.query(sqlInsert, function (error, results, fields) {
+      if (error) throw error;
+    })
+
+  })
 }
