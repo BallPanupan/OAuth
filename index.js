@@ -86,7 +86,6 @@ app.post('/newToken', (req, res) => {
   // check token on Database
   let userToken = CheckRefToken({refreshToken:refreshToken})
   userInfo = userToken.then(function(result) {
-    console.log('result', result)
     if(result.length > 0 ) {
       result[0].refreshToken
       jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
