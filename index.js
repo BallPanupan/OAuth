@@ -23,7 +23,6 @@ const posts = [
 
 let refreshTokens = []
 
-
 app.post('/register', (req, res) => {
   let prepareData = {
     username : req.body.username,
@@ -61,6 +60,7 @@ app.post('/login', (req, res) => {
 
       //next : keep this on Database
       refreshTokens.push(refreshToken)
+      console.log(refreshTokens)
       res.json({
         accessToken: generateAccessToken(user),
         refreshToken: refreshToken
@@ -82,6 +82,7 @@ app.post('/req_newToken', (req, res) => {
   if(refreshToken == null ) return res.sendStatus(401)
 
   if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
+  console.log(refreshTokens)
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
     if(err) return res.sendStatus(403)
@@ -94,7 +95,7 @@ app.post('/req_newToken', (req, res) => {
 app.delete('/logout', (req, res) => {
   refreshTokens = refreshTokens.filter(token => token !== req.body.token)
   res.sendStatus(204)
-
+  console.log(refreshTokens)
 })
 
 
