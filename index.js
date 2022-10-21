@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
-const { register, CheckUser, InsertToken } = require('./module/sql_connection')
+const { register, CheckUser, InsertToken, CheckToken, CheckRefToken } = require('./module/sql_connection')
 app.use(express.json())
 
 const posts = [
@@ -35,7 +35,6 @@ app.post('/register', (req, res) => {
   res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
 })
 
-
 //query and show detial of user
 app.get('/posts', authenticateToken, (req, res) => {
   let userToken = CheckUser({username:req.user.name})
@@ -59,8 +58,8 @@ app.post('/login', (req, res) => {
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
       //next : keep this on Database
 
-      // refreshTokens.push(refreshToken)
-
+      refreshTokens.push(refreshToken)
+      console.log(refreshTokens)
       InsertToken({ username:username, refreshToken:refreshToken })
 
       res.json({
@@ -78,18 +77,27 @@ function generateAccessToken(user) {
 }
 
 
-app.post('/req_newToken', (req, res) => {
-
+app.post('/newToken', (req, res) => {
+  console.log(refreshTokens)
   const refreshToken = req.body.token
   if(refreshToken == null ) return res.sendStatus(401)
+  // if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
 
-  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
-  console.log(refreshTokens)
-
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-    if(err) return res.sendStatus(403)
-    const accessToken = generateAccessToken({name: user.name})
-    res.json({accessToken: accessToken})
+  // check token on Database
+  let userToken = CheckRefToken({refreshToken:refreshToken})
+  userInfo = userToken.then(function(result) {
+    console.log('result', result)
+    if(result.length > 0 ) {
+      result[0].refreshToken
+      jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if(err) return res.sendStatus(403)
+        const accessToken = generateAccessToken({name: user.name})
+        res.json({accessToken: accessToken})
+      })
+    } else {
+      res.sendStatus(401)
+    }
+    
   })
 
 })

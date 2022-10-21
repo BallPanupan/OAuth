@@ -60,3 +60,20 @@ exports.InsertToken = async function (data) {
 
   })
 }
+
+exports.CheckRefToken = async function (data) {
+  let sqlQuery = `SELECT * FROM token WHERE refreshToken = '${data.refreshToken}' LIMIT 1;`
+
+  async function main() {
+    // create the pool
+    const pool = connection
+    // now get a Promise wrapped instance of that pool
+    const promisePool = pool.promise();
+    // query database using promises
+    const [rows,fields] = await promisePool.query(sqlQuery);
+    return rows
+  }
+
+  return main()
+
+}
