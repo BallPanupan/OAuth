@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 18, 2022 at 09:43 AM
+-- Generation Time: Oct 21, 2022 at 08:43 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -53,15 +53,19 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` text NOT NULL,
   `password` text NOT NULL,
-  `type_id` int(11) NOT NULL
+  `type_id` int(11) NOT NULL,
+  `accessToken` text NOT NULL,
+  `refreshToken` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `type_id`) VALUES
-(1, 'admin', 'admin', 1);
+INSERT INTO `user` (`id`, `username`, `password`, `type_id`, `accessToken`, `refreshToken`) VALUES
+(1, 'admin', 'admin', 1, '', ''),
+(19, 'testRegister27', 'Password27', 1, '', ''),
+(22, 'testRegister28', 'Password28', 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdFJlZ2lzdGVyMjgiLCJpYXQiOjE2NjYyMzcwMjYsImV4cCI6MTY2NjIzNzA0MX0.676uoN9oMyIKcDYe7YqubYWHltvmqQ26DyHGmuxjr-8', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidGVzdFJlZ2lzdGVyMjgiLCJpYXQiOjE2NjYyMzcwMjZ9.ji5Qh7rrmQpIMxysoLSrgzL8oS_t7ZagDhWMLQRNtdE');
 
 -- --------------------------------------------------------
 
@@ -123,7 +127,7 @@ ALTER TABLE `permisstion`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `user_type`
