@@ -38,9 +38,7 @@ exports.CheckUser = async function (info) {
     const [rows,fields] = await promisePool.query(sqlQuery);
     return rows
   }
-
   return main()
-  
 }
 
 
@@ -60,6 +58,14 @@ exports.InsertToken = async function (data) {
 
   })
 }
+
+exports.DeleteToken = async function (data) {
+  let sqlQuery = `DELETE FROM token WHERE id = '${data.id}'`;
+  connection.query(sqlQuery, function (error, results, fields) {
+    if (error) throw error;
+  })
+}
+
 
 exports.CheckRefToken = async function (data) {
   let sqlQuery = `SELECT * FROM token WHERE refreshToken = '${data.refreshToken}' LIMIT 1;`

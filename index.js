@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
-const { register, CheckUser, InsertToken, CheckToken, CheckRefToken } = require('./module/sql_connection')
+const { register, CheckUser, InsertToken, CheckToken, CheckRefToken, DeleteToken } = require('./module/sql_connection')
 app.use(express.json())
 
 const posts = [
@@ -58,8 +58,8 @@ app.post('/login', (req, res) => {
       const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
       //next : keep this on Database
 
-      refreshTokens.push(refreshToken)
-      console.log(refreshTokens)
+      // refreshTokens.push(refreshToken)
+      // console.log(refreshTokens)
       InsertToken({ username:username, refreshToken:refreshToken })
 
       res.json({
@@ -78,7 +78,7 @@ function generateAccessToken(user) {
 
 
 app.post('/newToken', (req, res) => {
-  console.log(refreshTokens)
+  // console.log(refreshTokens)
   const refreshToken = req.body.token
   if(refreshToken == null ) return res.sendStatus(401)
   // if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
@@ -96,15 +96,21 @@ app.post('/newToken', (req, res) => {
     } else {
       res.sendStatus(401)
     }
-    
   })
 
 })
 
 app.delete('/logout', (req, res) => {
-  refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-  res.sendStatus(204)
-  console.log(refreshTokens)
+  // refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+  let userToken = CheckRefToken({refreshToken:req.body.token})
+  userInfo = userToken.then(function(result) {
+    if(result.length > 0 ) {
+      DeleteToken(result[0])
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(401)
+    }
+  })
 })
 
 
