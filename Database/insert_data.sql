@@ -1,7 +1,7 @@
-INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'Admin');
-INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'Employe');
-INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'Clienc');
-INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'Visitor');
+INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'admin');
+INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'employe');
+INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'clienc');
+INSERT INTO `user_type` (`id`, `type_name`) VALUES (NULL, 'visitor');
 
 INSERT INTO `application_name` (`id`, `app_name`) VALUES (NULL, 'Keyword App');
 INSERT INTO `application_name` (`id`, `app_name`) VALUES (NULL, 'CMP');
