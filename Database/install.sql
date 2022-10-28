@@ -12,9 +12,22 @@ CREATE TABLE `oauth`.`user` (
   `username` TEXT NOT NULL ,
   `password` TEXT NOT NULL ,
   `type_id` INT NOT NULL ,
+  `accessToken` INT NOT NULL ,
+  `refreshToken` INT NOT NULL ,
+  `first_name` TEXT NOT NULL ,
+  `last_name` TEXT NOT NULL ,
+  `email` TEXT NOT NULL ,
+  `email_verified_at` TEXT NOT NULL ,
+  `status` TEXT NOT NULL ,
+  `avatar` TEXT NOT NULL ,
+  `role_id` TEXT NOT NULL ,
+  `created_at` TEXT NOT NULL ,
+  `updated_at` TEXT NOT NULL ,
   PRIMARY KEY (`id`),
   FOREIGN KEY (type_id) REFERENCES user_type(id)
 ) ENGINE = InnoDB;
+
+
 
 CREATE TABLE `oauth`.`application_name` (
   `id` INT NOT NULL AUTO_INCREMENT ,
