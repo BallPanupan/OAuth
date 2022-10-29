@@ -3,9 +3,10 @@ const express = require('express')
 const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
+const { CheckUser } = require('./module/CheckUser')
 const { Register } = require('./module/Register')
 
-const { CheckUser, InsertToken, CheckRefToken, DeleteToken } = require('./module/sql_connection')
+const { InsertToken, CheckRefToken, DeleteToken } = require('./module/sql_connection')
 app.use(express.json())
 
 const posts = [

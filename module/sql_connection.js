@@ -15,16 +15,16 @@ function mainConnection (query) {
   
 }
 
-exports.register = async function (info) {
-  let query = `INSERT INTO user SET 
-  username = '${info.username}', 
-  password = '${info.password}', 
-  type_id = 1, accessToken = '${info.accessToken}', 
-  refreshToken = '${info.refreshToken}';`
+// exports.register = async function (info) {
+//   let query = `INSERT INTO user SET 
+//   username = '${info.username}', 
+//   password = '${info.password}', 
+//   type_id = 1, accessToken = '${info.accessToken}', 
+//   refreshToken = '${info.refreshToken}';`
   
-  mainConnection(query);
-  // console.log('Register : ', info.username)
-}
+//   mainConnection(query);
+//   // console.log('Register : ', info.username)
+// }
 
 exports.CheckUser = async function (info) {
   let sqlQuery = `SELECT * FROM user WHERE username = '${info.username}' LIMIT 1;`
