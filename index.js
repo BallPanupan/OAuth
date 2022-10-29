@@ -4,6 +4,7 @@ const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
 const { CheckUser } = require('./module/CheckUser')
+const { InsertLoginToken } = require('./module/InsertLoginToken')
 const { Register } = require('./module/Register')
 
 const { InsertToken, CheckRefToken, DeleteToken } = require('./module/sql_connection')
@@ -64,7 +65,8 @@ app.post('/login', async (req, res) => {
     }
 
     const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET)
-    InsertToken({ username:username, refreshToken:refreshToken })
+
+    InsertLoginToken({ id:userResult.data.id, refreshToken:refreshToken })
 
     res.json({
       accessToken: generateAccessToken(userData),
