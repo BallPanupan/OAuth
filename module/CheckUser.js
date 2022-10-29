@@ -5,8 +5,14 @@ exports.CheckUser = async function (info) {
   let result = await Database.query(query);
 
   if(Object.keys(result).length > 0){
-    return true
+    return {
+      'status' : true,
+      'data': result[0]
+    }
   } else {
-    return false
+    return {
+      'status': false,
+      'message' : `no user ${info.username}`
+    }
   } 
 }
