@@ -3,8 +3,18 @@ const express = require('express')
 const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
+const { Database } = require('./database')
 const { register, CheckUser, InsertToken, CheckRefToken, DeleteToken } = require('./module/sql_connection')
 app.use(express.json())
+
+
+async function ftest(){
+  let xsql = 'SELECT * FROM user'; 
+  const testQuery = await Database.query(xsql);
+  
+  console.log(testQuery)
+}
+ftest()
 
 const posts = [
   {

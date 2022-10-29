@@ -5,7 +5,7 @@ class Database {
     this.connection = mysql.createConnection( config ); 
   }
 
-  query(sql, arge) {
+  query(sql, args) {
     //note: here, for practical pureposes 'resolve' means 'fulfilled'
     return new Promise( (resolve, reject) => {
 
