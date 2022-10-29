@@ -4,6 +4,7 @@ const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
 const { CheckUser } = require('./module/CheckUser')
+const { InsertLoginToken } = require('./module/InsertLoginToken')
 const { Register } = require('./module/Register')
 
 const { InsertToken, CheckRefToken, DeleteToken } = require('./module/sql_connection')
@@ -42,43 +43,43 @@ app.post('/register', async (req, res) => {
 })
 
 //query and show detial of user
-app.get('/posts', authenticateToken, (req, res) => {
-  let userToken = CheckUser({username:req.user.username})
-  userInfo = userToken.then(function(result) {
-    if(result.length > 0 ){
-      res.json(result)
-    }else{
-      res.sendStatus(401)
-    }
-  })
+app.get('/posts', authenticateToken, async (req, res) => {
+  let userResult = await CheckUser({username:req.user.username})
+  if(userResult.status){
+    res.json(userResult.data)
+  }else{
+    res.sendStatus(401)
+  }
 }) 
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const username = req.body.username
-  // const user = { name: username }
-  let userToken = CheckUser({username:username})
 
-  userInfo = userToken.then(function(result) {
-    if(result.length > 0 ){
-      const userData = {
-        "id": result[0].id,
-        "username": result[0].username,
-        "type_id": result[0].type_id,
-      }
-      const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET)
-      InsertToken({ username:username, refreshToken:refreshToken })
-      res.json({
-        accessToken: generateAccessToken(userData),
-        refreshToken: refreshToken
-      })
-    }else{
-      res.sendStatus(401)
+  let userResult = await CheckUser({username:username})
+
+  if(userResult.status){
+    const userData = {
+      "id": userResult.data.id,
+      "username": userResult.data.username,
+      "type_id": userResult.data.type_id,
     }
-  })
+
+    const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET)
+
+    InsertLoginToken({ id:userResult.data.id, refreshToken:refreshToken })
+
+    res.json({
+      accessToken: generateAccessToken(userData),
+      refreshToken: refreshToken
+    })
+  }else{
+    res.sendStatus(401)
+  }
+
 })
 
 function generateAccessToken(data) {
-  return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'})
+  return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10000s'})
 }
 
 

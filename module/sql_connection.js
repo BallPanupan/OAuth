@@ -42,22 +42,22 @@ exports.CheckUser = async function (info) {
 }
 
 
-exports.InsertToken = async function (data) {
-  let sqlQuery = `SELECT * FROM user WHERE username = '${data.username}' LIMIT 1;`
-  connection.query(sqlQuery, function (error, results, fields) {
-    if (error) throw error;
+// exports.InsertToken = async function (data) {
+//   let sqlQuery = `SELECT * FROM user WHERE username = '${data.username}' LIMIT 1;`
+//   connection.query(sqlQuery, function (error, results, fields) {
+//     if (error) throw error;
 
-    let sqlInsert = `INSERT INTO token SET 
-    user_id = '${results[0].id}', 
-    refreshToken = '${data.refreshToken}', 
-    tokenStatus = '';`
+//     let sqlInsert = `INSERT INTO token SET 
+//     user_id = '${results[0].id}', 
+//     refreshToken = '${data.refreshToken}', 
+//     tokenStatus = '';`
 
-    connection.query(sqlInsert, function (error, results, fields) {
-      if (error) throw error;
-    })
+//     connection.query(sqlInsert, function (error, results, fields) {
+//       if (error) throw error;
+//     })
 
-  })
-}
+//   })
+// }
 
 exports.DeleteToken = async function (data) {
   let sqlQuery = `DELETE FROM token WHERE id = '${data.id}'`;
