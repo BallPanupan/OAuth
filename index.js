@@ -9,7 +9,8 @@ const { DeleteLoginToken } = require('./module/DeleteLoginToken')
 const { InsertLoginToken } = require('./module/InsertLoginToken')
 const { Register } = require('./module/Register')
 
-app.use(express.json())
+const blogRoutes = require('./routes/blogRoutes');
+app.use('/blogs', blogRoutes);
 
 const posts = [
   {
@@ -27,6 +28,7 @@ const posts = [
 ]
 
 let refreshTokens = []
+
 
 app.post('/register', async (req, res) => {
   let prepareData = {
