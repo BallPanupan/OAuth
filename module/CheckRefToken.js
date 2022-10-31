@@ -1,4 +1,4 @@
-const { Database } = require("../database")
+const { Database } = require("./database")
 
 exports.CheckRefToken = async function (refreshToken) {
   let query = `SELECT * FROM token WHERE refreshToken = '${refreshToken.refreshToken}' LIMIT 1;`

@@ -9,7 +9,6 @@ const { DeleteLoginToken } = require('./module/DeleteLoginToken')
 const { InsertLoginToken } = require('./module/InsertLoginToken')
 const { Register } = require('./module/Register')
 
-const { InsertToken, DeleteToken } = require('./module/sql_connection')
 app.use(express.json())
 
 const posts = [
@@ -85,46 +84,30 @@ function generateAccessToken(data) {
 }
 
 
-app.post('/newToken', (req, res) => {
-  // console.log(refreshTokens)
+app.post('/newToken', async (req, res) => {
   const refreshToken = req.body.token
+
   if(refreshToken == null ) return res.sendStatus(401)
-  // if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
 
   // check token on Database
-  let userToken = CheckRefToken({refreshToken:refreshToken})
-  userInfo = userToken.then(function(result) {
-    if(result.length > 0 ) {
-      jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if(err) return res.sendStatus(403)
-        const userData = {
-          "id": user.id,
-          "username": user.username,
-          "type_id": user.type_id,
-        }
-        const accessToken = generateAccessToken(userData)
-        res.json({accessToken: accessToken})
-      })
-    } else {
-      res.sendStatus(401)
-    }
-  })
+  let userToken = await CheckRefToken({refreshToken:refreshToken})
+
+  if(userToken.status){
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+      if(err) return res.sendStatus(403)
+      const userData = {
+        "id": user.id,
+        "username": user.username,
+        "type_id": user.type_id,
+      }
+      const accessToken = generateAccessToken(userData)
+      res.json({accessToken: accessToken})
+    })
+  }else {
+    res.sendStatus(401)
+  }
 
 })
-
-// app.delete('/logout', (req, res) => {
-//   // refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-//   let userToken = CheckRefToken({refreshToken:req.body.token})
-//   userInfo = userToken.then(function(result) {
-//     if(result.length > 0 ) {
-//       DeleteToken(result[0])
-//       res.sendStatus(204)
-//     } else {
-//       res.sendStatus(401)
-//     }
-//   })
-// })
-
 
 app.delete('/logout', async (req, res) => {
   // refreshTokens = refreshTokens.filter(token => token !== req.body.token)
@@ -141,8 +124,6 @@ app.delete('/logout', async (req, res) => {
   }
 
 })
-
-
 
 // Middleware functions
 function authenticateToken(req, res, next) {

@@ -1,4 +1,4 @@
-const { Database } = require("../database")
+const { Database } = require("./database")
 
 exports.CheckUser = async function (info) {
   let query = `SELECT * FROM user WHERE username = '${info.username}' LIMIT 1;`

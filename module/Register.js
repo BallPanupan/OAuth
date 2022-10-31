@@ -1,4 +1,4 @@
-const { Database } = require("../database")
+const { Database } = require("./database")
 
 exports.Register = async function (info) {
   let query = `INSERT INTO user SET 

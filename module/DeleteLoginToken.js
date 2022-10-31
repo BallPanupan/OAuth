@@ -1,10 +1,8 @@
-const { Database } = require("../database")
+const { Database } = require("./database")
 
 exports.DeleteLoginToken = async function (data) {
-  console.log(data.tokenId)
   let query = `DELETE FROM token WHERE id = '${data.tokenId}'`;
   let result = await Database.query(query);
-  console.log('Delete :', result)
 
   if(Object.keys(result).length > 0){
     return {

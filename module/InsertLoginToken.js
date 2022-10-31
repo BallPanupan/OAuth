@@ -1,7 +1,6 @@
-const { Database } = require("../database")
+const { Database } = require("./database")
 
 exports.InsertLoginToken = async function (info) {
-  console.log(info)
 
   let query = `INSERT INTO token SET 
     user_id = '${info.id}', 
