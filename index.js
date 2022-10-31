@@ -3,11 +3,13 @@ const express = require('express')
 const app = express()
 const port = 3000
 const jwt = require('jsonwebtoken')
+const { CheckRefToken } = require('./module/CheckRefToken')
 const { CheckUser } = require('./module/CheckUser')
+const { DeleteLoginToken } = require('./module/DeleteLoginToken')
 const { InsertLoginToken } = require('./module/InsertLoginToken')
 const { Register } = require('./module/Register')
 
-const { InsertToken, CheckRefToken, DeleteToken } = require('./module/sql_connection')
+const { InsertToken, DeleteToken } = require('./module/sql_connection')
 app.use(express.json())
 
 const posts = [
@@ -79,7 +81,7 @@ app.post('/login', async (req, res) => {
 })
 
 function generateAccessToken(data) {
-  return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10000s'})
+  return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15s'})
 }
 
 
@@ -110,18 +112,36 @@ app.post('/newToken', (req, res) => {
 
 })
 
-app.delete('/logout', (req, res) => {
+// app.delete('/logout', (req, res) => {
+//   // refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+//   let userToken = CheckRefToken({refreshToken:req.body.token})
+//   userInfo = userToken.then(function(result) {
+//     if(result.length > 0 ) {
+//       DeleteToken(result[0])
+//       res.sendStatus(204)
+//     } else {
+//       res.sendStatus(401)
+//     }
+//   })
+// })
+
+
+app.delete('/logout', async (req, res) => {
   // refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-  let userToken = CheckRefToken({refreshToken:req.body.token})
-  userInfo = userToken.then(function(result) {
-    if(result.length > 0 ) {
-      DeleteToken(result[0])
+  let userData = await CheckRefToken({refreshToken:req.body.token})
+  if(userData.status){
+    let result = await DeleteLoginToken({tokenId:userData.result.id})
+    if(result.status){
       res.sendStatus(204)
-    } else {
+    }else{
       res.sendStatus(401)
     }
-  })
+  }else{
+    res.sendStatus(401)
+  }
+
 })
+
 
 
 // Middleware functions
