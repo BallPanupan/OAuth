@@ -1,6 +1,6 @@
 require('dotenv').config()
-const express = require('express')
-const app = express()
+const express = require('express');
+const bodyParser = require('body-parser')
 const port = 3000
 const jwt = require('jsonwebtoken')
 const { CheckRefToken } = require('./module/CheckRefToken')
@@ -9,41 +9,30 @@ const { DeleteLoginToken } = require('./module/DeleteLoginToken')
 const { InsertLoginToken } = require('./module/InsertLoginToken')
 const { Register } = require('./module/Register')
 
-const blogRoutes = require('./routes/blogRoutes');
-app.use('/blogs', blogRoutes);
+// express app
+const app = express();
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
-const posts = [
-  {
-    username: 'Kyle',
-    title: 'Post 1'
-  },
-  {
-    username: 'Jim',
-    title: 'Post 1'
-  },
-  {
-    username: 'testRegister28',
-    title: 'Post 28'
-  }
-]
-
-let refreshTokens = []
+const authRoutes = require('./routes/authRoutes');
 
 
-app.post('/register', async (req, res) => {
-  let prepareData = {
-    username : req.body.username,
-    password : req.body.password,
-    accessToken : generateAccessToken({name: req.body.username}),
-    refreshToken : jwt.sign({name: req.body.username}, process.env.REFRESH_TOKEN_SECRET)
-  }
-  if(await Register(prepareData)){
-    res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
-  } else {
-    res.json({status:'error'})
-  }
+app.use('/auth', authRoutes);
 
-})
+// app.post('/register', async (req, res) => {
+//   let prepareData = {
+//     username : req.body.username,
+//     password : req.body.password,
+//     accessToken : generateAccessToken({name: req.body.username}),
+//     refreshToken : jwt.sign({name: req.body.username}, process.env.REFRESH_TOKEN_SECRET)
+//   }
+//   if(await Register(prepareData)){
+//     res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
+//   } else {
+//     res.json({status:'error'})
+//   }
+
+// })
 
 //query and show detial of user
 app.get('/posts', authenticateToken, async (req, res) => {

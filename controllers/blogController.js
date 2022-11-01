@@ -12,3 +12,12 @@ exports.blog_details = (req, res) => {
     'result': `this is a index page of /blog/${id}`
   })
 }
+
+const blog_create_post = (req, res) => {
+  console.log('xxxx')
+  console.log(req.body);
+}
+
+module.exports = {
+  blog_create_post 
+}
