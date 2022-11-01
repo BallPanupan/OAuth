@@ -20,7 +20,16 @@ exports.register = async (req, res) => {
     username : req.body.username,
     password : req.body.password,
     accessToken : generateAccessToken({name: req.body.username}),
-    refreshToken : jwt.sign({name: req.body.username}, process.env.REFRESH_TOKEN_SECRET)
+    refreshToken : jwt.sign({name: req.body.username}, process.env.REFRESH_TOKEN_SECRET),
+    first_name : req.body.first_name,
+    last_name : req.body.last_name,
+    email : "",
+    email_verified_at : "",
+    status : "",
+    avatar : "",
+    role_id : "",
+    created_at : "",
+    updated_at : "",
   }
   if(await Register(prepareData)){
     res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
