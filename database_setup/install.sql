@@ -12,8 +12,8 @@ CREATE TABLE `oauth`.`user` (
   `username` TEXT NOT NULL ,
   `password` TEXT NOT NULL ,
   `type_id` INT NOT NULL ,
-  `accessToken` INT NOT NULL ,
-  `refreshToken` INT NOT NULL ,
+  `accessToken` TEXT NOT NULL ,
+  `refreshToken` TEXT NOT NULL ,
   `first_name` TEXT NOT NULL ,
   `last_name` TEXT NOT NULL ,
   `email` TEXT NOT NULL ,
@@ -31,7 +31,8 @@ CREATE TABLE `oauth`.`user` (
 
 CREATE TABLE `oauth`.`application_name` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `app_name` TEXT NOT NULL , PRIMARY KEY (`id`)
+  `app_name` TEXT NOT NULL ,
+  PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
 CREATE TABLE `oauth`.`permisstion` (
@@ -48,8 +49,8 @@ CREATE TABLE `oauth`.`permisstion` (
 
 CREATE TABLE `oauth`.`token` (
   `id` INT NOT NULL AUTO_INCREMENT , 
-  `user_id` INT NOT NULL , `refreshToken` TEXT NOT NULL , 
-  `tokenStatus` TEXT NOT NULL , 
+  `user_id` INT NOT NULL ,
+  `refreshToken` TEXT NOT NULL , 
   PRIMARY KEY (`id`),
   FOREIGN KEY (user_id) REFERENCES user(id)
 ) ENGINE = InnoDB;
