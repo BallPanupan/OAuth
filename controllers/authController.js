@@ -1,16 +1,19 @@
-const { generateAccessToken } = require("../module/generateAccessToken")
+const { generateAccessToken } = require('../module/auth/generateAccessToken')
 const jwt = require('jsonwebtoken')
-const { Register } = require("../module/Register")
-const { CheckUser } = require("../module/CheckUser")
-const { InsertLoginToken } = require("../module/InsertLoginToken")
-const { CheckRefToken } = require("../module/CheckRefToken")
-const { DeleteLoginToken } = require("../module/DeleteLoginToken")
+const { Register } = require("../module/auth/Register")
+const { CheckUser } = require("../module/auth/CheckUser")
+const { InsertLoginToken } = require("../module/auth/InsertLoginToken")
+const { CheckRefToken } = require("../module/auth/CheckRefToken")
+const { DeleteLoginToken } = require("../module/auth/DeleteLoginToken")
+
+
 exports.main = (req, res) => {
   res.json({
     'status': true,
     'result': "Wellcome"
   })
 }
+generateAccessToken
 
 exports.register = async (req, res) => {
   let prepareData = {
