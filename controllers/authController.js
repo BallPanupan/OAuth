@@ -5,6 +5,7 @@ const { CheckUser } = require("../module/auth/CheckUser")
 const { InsertLoginToken } = require("../module/auth/InsertLoginToken")
 const { CheckRefToken } = require("../module/auth/CheckRefToken")
 const { DeleteLoginToken } = require("../module/auth/DeleteLoginToken")
+const { AddPermisstion } = require('../module/auth/AddPermisstion')
 
 
 exports.main = (req, res) => {
@@ -31,8 +32,12 @@ exports.register = async (req, res) => {
     created_at : "",
     updated_at : "",
   }
-  if(await Register(prepareData)){
-    res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
+
+  let registerResult = await Register(prepareData)
+  if(registerResult.status){
+    if (await AddPermisstion(registerResult.result.insertId)){
+      res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
+    }
   } else {
     res.json({status:'error'})
   }

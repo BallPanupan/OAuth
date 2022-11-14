@@ -16,11 +16,17 @@ exports.Register = async function (info) {
   created_at = '${info.created_at}',
   updated_at = '${info.updated_at}';`
 
-  console.log(query)
-  
   try {
-    await Database.query(query)
-    return true
+    let result = await Database.query(query)
+
+    if(Object.keys(result).length > 0){
+      return {
+        'status' : true,
+        'result' : result
+      }
+    }
+    
+
   } catch (error) {
     console.error(error);
   }

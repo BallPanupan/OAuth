@@ -39,9 +39,9 @@ CREATE TABLE `oauth`.`permisstion` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL ,
   `application_name` INT NOT NULL ,
-  `read` BOOLEAN NOT NULL,
-  `write` BOOLEAN NOT NULL,
-  `edit` BOOLEAN NOT NULL,
+  `app_read` BOOLEAN NOT NULL,
+  `app_write` BOOLEAN NOT NULL,
+  `app_edit` BOOLEAN NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (user_id) REFERENCES user(id),
   FOREIGN KEY (application_name) REFERENCES application_name(id)
