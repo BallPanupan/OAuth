@@ -15,7 +15,6 @@ exports.main = (req, res) => {
   })
 }
 
-
 // exports.register = async (req, res) => {
 //   let prepareData = {
 //     username : req.body.username,
@@ -33,14 +32,14 @@ exports.main = (req, res) => {
 //     updated_at : "",
 //   }
 
-//   let registerResult = await Register(prepareData)
-//   if(registerResult.status){
-//     if (await AddPermisstion(registerResult.result.insertId)){
-//       res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
-//     }
-//   } else {
-//     res.json({status:'error'})
-//   }
+  // let registerResult = await Register(prepareData)
+  // if(registerResult.status){
+  //   if (await AddPermisstion(registerResult.result.insertId)){
+  //     res.json({accessToken:prepareData.accessToken, refreshToken: prepareData.refreshToken})
+  //   }
+  // } else {
+  //   res.json({status:'error'})
+  // }
 // }
 
 // exports.posts = async (req, res) => {
