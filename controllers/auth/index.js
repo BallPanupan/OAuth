@@ -1,6 +1,10 @@
-const { _register } = require("./register");
+const { _register } = require("./registerController");
+const { _wellcome } = require("./wellcomeController");
+const { _getProfile } = require("./getProfileController");
 
 
 module.exports = {
-	register: _register
+	wellcome: _wellcome,
+	register: _register,
+	profile: _getProfile,
 }

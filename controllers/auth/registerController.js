@@ -22,8 +22,8 @@ async function _register(req, res) {
 		const prepareData = {
 			username,
 			password: hashedPassword,
-			accessToken: generateAccessToken({ name: username }),
-			refreshToken: jwt.sign({ name: username }, process.env.REFRESH_TOKEN_SECRET),
+			accessToken: generateAccessToken({ 'username': username }),
+			refreshToken: jwt.sign({ 'username': username }, process.env.REFRESH_TOKEN_SECRET),
 			firstName,
 			lastName,
 			email,
