@@ -2,12 +2,12 @@
 
 Create ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET
 ```
-    require('crypto').randomBytes(64).toString('hex')
+require('crypto').randomBytes(64).toString('hex')
 ```
 
 ```
-    Using MongoDB:		6.0.16
-    Using Mongosh:		2.2.10
+Using MongoDB:		6.0.16
+Using Mongosh:		2.2.10
 ```
 
 ## Setup MongoDB on Docker
