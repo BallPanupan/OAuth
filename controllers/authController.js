@@ -8,12 +8,6 @@ const jwt = require('jsonwebtoken')
 // const { AddPermisstion } = require('../module/auth/AddPermisstion')
 
 
-exports.main = (req, res) => {
-  res.json({
-    'status': true,
-    'result': "Wellcome"
-  })
-}
 
 // exports.register = async (req, res) => {
 //   let prepareData = {
