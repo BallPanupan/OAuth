@@ -1,8 +1,7 @@
 const User = require('../../models/User');
-const { generateAccessToken } = require('./module/generateAccessToken');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const RefreshToken = require('../../models/RefreshTokenSchema');
+const { SaveRefreshToken } = require('./module/InsertLoginToken');
+const GenerateAccessToken = require('./module/GenerateAccessToken');
 
 async function _register(req, res) {
 	const { username, password, firstName, lastName, email } = req.body;
@@ -12,15 +11,15 @@ async function _register(req, res) {
 		let existingUser = await User.findOne({ email });
 
 		if (existingUser) {
-			return res.status(400).json({ status: 'error', message: 'User already exists' });
+			return res.status(400).json({ status: false, message: 'User already exists' });
 		}
 
 		// Prepare user data
 		const prepareData = {
 			username,
 			password: password,
-			accessToken: generateAccessToken({ 'username': username }),
-			refreshToken: jwt.sign({ 'username': username }, process.env.REFRESH_TOKEN_SECRET),
+			accessToken: GenerateAccessToken({ 'username': username }),
+			refreshToken: jwt.sign({ 'username': username }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'}),
 			firstName,
 			lastName,
 			email,
@@ -38,15 +37,24 @@ async function _register(req, res) {
 			createdAt: prepareData.createdAt,
 			expired: false,
 		}
-		const saveRef = await RefreshToken.create(ref);
+
+		// Save RefreshToken
+		const saveRefToken = await SaveRefreshToken({
+			userId: newUser._id,
+			refreshToken: prepareData.refreshToken,
+		})
+		if (!saveRefToken) throw {
+			message: saveRefToken,
+		};
+
 		return res.status(201).json({
 			accessToken: prepareData.accessToken,
 			refreshToken: prepareData.refreshToken,
 			status: true,
 		});
 	} catch (error) {
-		console.error('Error registering user:', error);
-		return res.status(500).json({ status: 'error', message: error.message || 'Internal Server Error' });
+		console.error(`\x1b[31m[register]\x1b[0m`, error);
+		return res.status(500).json({ status: false, message: error.message || 'Internal Server Error' });
 	}
 }
 

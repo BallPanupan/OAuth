@@ -11,7 +11,7 @@ async function main() {
 
 		const app = express();
 		app.use(bodyParser.json())
-		app.use(bodyParser.urlencoded({ extended: false }))
+		app.use(bodyParser.urlencoded({ extended: true }));
 
 		const authRoutes = require('./routes/authRoutes');
 		app.use('/auth', authRoutes);
