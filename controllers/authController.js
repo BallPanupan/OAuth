@@ -1,4 +1,4 @@
-const { generateAccessToken } = require('../module/auth/generateAccessToken')
+const { generateAccessToken } = require('./auth/module/generateAccessToken')
 const jwt = require('jsonwebtoken')
 // const { Register } = require("../module/auth/Register")
 // const { CheckUser } = require("../module/auth/CheckUser")

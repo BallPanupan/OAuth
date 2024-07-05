@@ -1,5 +1,5 @@
 const User = require('../../models/User');
-const { generateAccessToken } = require('../../module/auth/generateAccessToken');
+const { generateAccessToken } = require('./module/generateAccessToken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const RefreshToken = require('../../models/RefreshTokenSchema');
@@ -15,13 +15,10 @@ async function _register(req, res) {
 			return res.status(400).json({ status: 'error', message: 'User already exists' });
 		}
 
-		// Encrypt the password
-		const hashedPassword = await bcrypt.hash(password, 10);
-
 		// Prepare user data
 		const prepareData = {
 			username,
-			password: hashedPassword,
+			password: password,
 			accessToken: generateAccessToken({ 'username': username }),
 			refreshToken: jwt.sign({ 'username': username }, process.env.REFRESH_TOKEN_SECRET),
 			firstName,
