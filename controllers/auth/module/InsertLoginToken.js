@@ -10,7 +10,7 @@ async function SaveRefreshToken(data) {
     })
     return true
   }catch(error){
-    console.error('SaveRefreshToken: ', error.message);
+    console.error(`\x1b[31m[SaveRefreshToken]`, error.message);
     return false;
   }
 }
