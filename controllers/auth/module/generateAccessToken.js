@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken')
 
-exports.generateAccessToken = (data) => {
-  return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+async function GenerateAccessToken(data) {
+  return jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRESIN
+  })
 }
+
+module.exports = GenerateAccessToken

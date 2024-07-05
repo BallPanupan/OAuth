@@ -1,8 +1,8 @@
 const jsonwebtoken = require("jsonwebtoken")
 const { CheckUser } = require("./module/CheckUser");
 const bcrypt = require("bcryptjs/dist/bcrypt");
-const { generateAccessToken } = require("./module/generateAccessToken");
 const { SaveRefreshToken } = require("./module/InsertLoginToken");
+const GenerateAccessToken = require("./module/GenerateAccessToken");
 
 async function _login(req, res) {
 	try {
@@ -16,7 +16,7 @@ async function _login(req, res) {
 				"id"      : user.data._id     ,
 				"username": user.data.username,
 			}
-			const refreshToken = jsonwebtoken.sign(userData, process.env.REFRESH_TOKEN_SECRET)
+			const refreshToken = jsonwebtoken.sign(userData, process.env.REFRESH_TOKEN_SECRET,{expiresIn: '1d'} )
 			const saveRefToken = await SaveRefreshToken({
 				userId: user.data._id,
 				refreshToken: refreshToken,
@@ -25,10 +25,10 @@ async function _login(req, res) {
 				message: saveRefToken,
 				user: user.data.username,
 			};
-
+			const accessToken = await GenerateAccessToken(userData);
 			res.status(200).json({
 				status      : true,
-				accessToken : generateAccessToken(userData),
+				accessToken : accessToken,
 				refreshToken: refreshToken
 			})
 		}

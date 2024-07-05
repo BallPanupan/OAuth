@@ -10,7 +10,7 @@ router.get('/', auth.wellcome);
 router.post('/register', auth.register);
 router.post('/login', auth.login);
 router.get('/me', AuthenticateToken, auth.profile);
-// router.post('/refreshToken', auth.refreshToken);
+router.post('/refreshToken', auth.refreshToken);
 
 
 

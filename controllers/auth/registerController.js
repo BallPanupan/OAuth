@@ -1,7 +1,7 @@
 const User = require('../../models/User');
-const { generateAccessToken } = require('./module/generateAccessToken');
 const jwt = require('jsonwebtoken');
 const { SaveRefreshToken } = require('./module/InsertLoginToken');
+const GenerateAccessToken = require('./module/GenerateAccessToken');
 
 async function _register(req, res) {
 	const { username, password, firstName, lastName, email } = req.body;
@@ -18,8 +18,8 @@ async function _register(req, res) {
 		const prepareData = {
 			username,
 			password: password,
-			accessToken: generateAccessToken({ 'username': username }),
-			refreshToken: jwt.sign({ 'username': username }, process.env.REFRESH_TOKEN_SECRET),
+			accessToken: GenerateAccessToken({ 'username': username }),
+			refreshToken: jwt.sign({ 'username': username }, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'}),
 			firstName,
 			lastName,
 			email,

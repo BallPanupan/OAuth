@@ -1,7 +1,7 @@
 const User = require("../../models/User")
 
 async function _getProfile(req, res) {
-	let user = await User.findOne({ username: req.user.username }).lean() || null
+	let user = await User.findOne({ username: req.user.username }, {password:0}).lean() || null
 	if (user) {
 		res.json(user)
 	} else {
