@@ -1,6 +1,6 @@
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
-const { SaveRefreshToken } = require('./module/InsertLoginToken');
+const saveToken = require('./module/saveToken');
 const GenerateAccessToken = require('./module/GenerateAccessToken');
 
 async function _register(req, res) {
@@ -39,7 +39,7 @@ async function _register(req, res) {
 		}
 
 		// Save RefreshToken
-		const saveRefToken = await SaveRefreshToken({
+		const saveRefToken = await saveToken.refreshToken({
 			userId: newUser._id,
 			refreshToken: prepareData.refreshToken,
 		})

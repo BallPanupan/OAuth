@@ -4,6 +4,7 @@ const { _getProfile   } = require("./getProfileController" );
 const { _login        } = require("./login"                );
 const { _refreshToken } = require("./refreshToken"         );
 const { _logout       } = require("./logout"               );
+const { _validateToken } = require("./validateToken");
 
 module.exports = {
 	wellcome     : _wellcome     ,
@@ -12,4 +13,5 @@ module.exports = {
 	login        : _login        ,
 	refreshToken : _refreshToken ,
 	logout       : _logout       ,
+	validateToken: _validateToken,
 }

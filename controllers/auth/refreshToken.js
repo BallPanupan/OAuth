@@ -3,7 +3,7 @@ const { CheckRefTokenexpired } = require("./module/CheckRefToken");
 const GenerateAccessToken = require("./module/GenerateAccessToken");
 const GenerateRefreshToken = require("./module/GenerateRefreshToken");
 const RefreshToken = require("../../models/RefreshTokenSchema");
-const { SaveRefreshToken } = require("./module/InsertLoginToken");
+const saveToken = require("./module/saveToken");
 
 // helper
 async function refreshTokenIsOld(refreshTokenExpired) {
@@ -55,10 +55,16 @@ async function _refreshToken(req, res) {
 				).lean();
 
 				// Save new refresh token
-				const saveRefToken = await SaveRefreshToken({
+				const saveRefToken = await saveToken.refreshToken({
 					userId: decoded.id,
 					refreshToken: newRefreshToken,
 				});
+
+				const saveAccessToken = await saveToken.accessToken({
+					userId: decoded.id,
+					accessToken: accessToken,
+				});
+
 			} catch (error) {
 				console.error('Error updating or saving tokens:', error.message);
 				// Handle error as needed
